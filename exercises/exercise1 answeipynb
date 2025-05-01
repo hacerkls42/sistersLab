@@ -1,0 +1,567 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "74e02642",
+   "metadata": {},
+   "source": [
+    "## Exercise 1"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "5fb85c5e",
+   "metadata": {},
+   "source": [
+    "#### Question 1:\n",
+    "Write a function that receives a list as parameter and return how many elements it has; if it doesn't have any element return an error."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "e0bc596b",
+   "metadata": {},
+   "source": [
+    "#### Answer 1:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "bd94655f",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def count_elements(collection: list) -> int:\n",
+    "    \"\"\"\n",
+    "    Return the number of items in `collection`.\n",
+    "\n",
+    "    :param collection: list of any items\n",
+    "    :return: int length of the list\n",
+    "    :raises TypeError: if `collection` is not a list\n",
+    "    :raises ValueError: if `collection` is empty\n",
+    "    \"\"\"\n",
+    "    if not isinstance(collection, list):\n",
+    "        raise TypeError(f\"Expected list, got {type(collection).__name__}\")\n",
+    "    length = len(collection)\n",
+    "    if length == 0:\n",
+    "        raise ValueError(\"List is empty\")\n",
+    "    return length"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "57709b24",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "3"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "count_elements([1, 2, ['a', 'b']])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "11853a14",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "TypeError",
+     "evalue": "Expected list, got int",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[0;32mIn[7], line 1\u001b[0m\n\u001b[0;32m----> 1\u001b[0m \u001b[43mcount_elements\u001b[49m\u001b[43m(\u001b[49m\u001b[38;5;241;43m1\u001b[39;49m\u001b[43m)\u001b[49m\n",
+      "Cell \u001b[0;32mIn[4], line 3\u001b[0m, in \u001b[0;36mcount_elements\u001b[0;34m(collection)\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[38;5;28;01mdef\u001b[39;00m \u001b[38;5;21mcount_elements\u001b[39m(collection: \u001b[38;5;28mlist\u001b[39m) \u001b[38;5;241m-\u001b[39m\u001b[38;5;241m>\u001b[39m \u001b[38;5;28mint\u001b[39m:\n\u001b[1;32m      2\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(collection, \u001b[38;5;28mlist\u001b[39m):\n\u001b[0;32m----> 3\u001b[0m         \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mTypeError\u001b[39;00m(\u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mExpected list, got \u001b[39m\u001b[38;5;132;01m{\u001b[39;00m\u001b[38;5;28mtype\u001b[39m(collection)\u001b[38;5;241m.\u001b[39m\u001b[38;5;18m__name__\u001b[39m\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;124m\"\u001b[39m)\n\u001b[1;32m      4\u001b[0m     length \u001b[38;5;241m=\u001b[39m \u001b[38;5;28mlen\u001b[39m(collection)\n\u001b[1;32m      5\u001b[0m     \u001b[38;5;28;01mif\u001b[39;00m length \u001b[38;5;241m==\u001b[39m \u001b[38;5;241m0\u001b[39m:\n",
+      "\u001b[0;31mTypeError\u001b[0m: Expected list, got int"
+     ]
+    }
+   ],
+   "source": [
+    "count_elements(1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "50eb6779",
+   "metadata": {},
+   "source": [
+    "#### Question 2:\n",
+    "Write a function that builds a character‑count dict from a string, with an option to ignore case."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "862eb2c2",
+   "metadata": {},
+   "source": [
+    "#### Answer 2:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "efd8d341",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import collections\n",
+    "\n",
+    "def char_frequency(text: str, ignore_case: bool = True) -> dict:\n",
+    "    \"\"\"\n",
+    "    Count how many times each character appears in `text`.\n",
+    "\n",
+    "    :param text: input string\n",
+    "    :param ignore_case: whether to map 'A' and 'a' together (default True)\n",
+    "    :return: dict mapping character -> count\n",
+    "    :raises TypeError: if `text` is not a str\n",
+    "    \"\"\"\n",
+    "    if not isinstance(text, str):\n",
+    "        raise TypeError(f\"Expected str, got {type(text).__name__}\")\n",
+    "    if ignore_case:\n",
+    "        text = text.lower()\n",
+    "    return dict(collections.Counter(text))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "a92918db",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "{'a': 3, 'd': 1, 'n': 1}"
+      ]
+     },
+     "execution_count": 17,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "char_frequency(\"Adana\", ignore_case=True)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a2ae4501",
+   "metadata": {},
+   "source": [
+    "#### Question 3:\n",
+    "Write a function that filters a list of numbers by a threshold and returns their squares"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "25a2ba90",
+   "metadata": {},
+   "source": [
+    "#### Answer 3:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 20,
+   "id": "723403ef",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def filter_and_square(numbers: list, threshold: float) -> list:\n",
+    "    \"\"\"\n",
+    "    From `numbers`, keep only those > `threshold` and return a list of their squares.\n",
+    "\n",
+    "    :param numbers: list of ints or floats\n",
+    "    :param threshold: numeric cutoff\n",
+    "    :return: list of int/float squares\n",
+    "    :raises TypeError: if inputs are wrong types\n",
+    "    \"\"\"\n",
+    "    if not isinstance(numbers, list):\n",
+    "        raise TypeError(f\"Expected list for numbers, got {type(numbers).__name__}\")\n",
+    "    if not all(isinstance(x, (int, float)) for x in numbers):\n",
+    "        raise TypeError(\"All items in numbers must be int or float\")\n",
+    "    if not isinstance(threshold, (int, float)):\n",
+    "        raise TypeError(f\"Expected numeric threshold, got {type(threshold).__name__}\")\n",
+    "\n",
+    "    return [x**2 for x in numbers if x > threshold]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 21,
+   "id": "5406cfdb",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[25, 100]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(filter_and_square([1, 5, 10, 3], threshold=4))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "id": "8d5a7483",
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "TypeError",
+     "evalue": "Expected list for numbers, got int",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mTypeError\u001b[0m                                 Traceback (most recent call last)",
+      "Cell \u001b[0;32mIn[22], line 1\u001b[0m\n\u001b[0;32m----> 1\u001b[0m \u001b[38;5;28mprint\u001b[39m(\u001b[43mfilter_and_square\u001b[49m\u001b[43m(\u001b[49m\u001b[38;5;241;43m1\u001b[39;49m\u001b[43m,\u001b[49m\u001b[43m \u001b[49m\u001b[43mthreshold\u001b[49m\u001b[38;5;241;43m=\u001b[39;49m\u001b[38;5;241;43m0\u001b[39;49m\u001b[43m)\u001b[49m)\n",
+      "Cell \u001b[0;32mIn[20], line 11\u001b[0m, in \u001b[0;36mfilter_and_square\u001b[0;34m(numbers, threshold)\u001b[0m\n\u001b[1;32m      2\u001b[0m \u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[1;32m      3\u001b[0m \u001b[38;5;124;03mFrom `numbers`, keep only those > `threshold` and return a list of their squares.\u001b[39;00m\n\u001b[1;32m      4\u001b[0m \n\u001b[0;32m   (...)\u001b[0m\n\u001b[1;32m      8\u001b[0m \u001b[38;5;124;03m:raises TypeError: if inputs are wrong types\u001b[39;00m\n\u001b[1;32m      9\u001b[0m \u001b[38;5;124;03m\"\"\"\u001b[39;00m\n\u001b[1;32m     10\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28misinstance\u001b[39m(numbers, \u001b[38;5;28mlist\u001b[39m):\n\u001b[0;32m---> 11\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mTypeError\u001b[39;00m(\u001b[38;5;124mf\u001b[39m\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mExpected list for numbers, got \u001b[39m\u001b[38;5;132;01m{\u001b[39;00m\u001b[38;5;28mtype\u001b[39m(numbers)\u001b[38;5;241m.\u001b[39m\u001b[38;5;18m__name__\u001b[39m\u001b[38;5;132;01m}\u001b[39;00m\u001b[38;5;124m\"\u001b[39m)\n\u001b[1;32m     12\u001b[0m \u001b[38;5;28;01mif\u001b[39;00m \u001b[38;5;129;01mnot\u001b[39;00m \u001b[38;5;28mall\u001b[39m(\u001b[38;5;28misinstance\u001b[39m(x, (\u001b[38;5;28mint\u001b[39m, \u001b[38;5;28mfloat\u001b[39m)) \u001b[38;5;28;01mfor\u001b[39;00m x \u001b[38;5;129;01min\u001b[39;00m numbers):\n\u001b[1;32m     13\u001b[0m     \u001b[38;5;28;01mraise\u001b[39;00m \u001b[38;5;167;01mTypeError\u001b[39;00m(\u001b[38;5;124m\"\u001b[39m\u001b[38;5;124mAll items in numbers must be int or float\u001b[39m\u001b[38;5;124m\"\u001b[39m)\n",
+      "\u001b[0;31mTypeError\u001b[0m: Expected list for numbers, got int"
+     ]
+    }
+   ],
+   "source": [
+    "print(filter_and_square(1, threshold=0))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 23,
+   "id": "52198d66",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "my_list = ['one', 'two', 'three', 'four', 'five']"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 24,
+   "id": "336f3090",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "one\n",
+      "four\n",
+      "five\n"
+     ]
+    }
+   ],
+   "source": [
+    "for number in my_list:\n",
+    "    if number == 'two':\n",
+    "        my_list.remove('two')\n",
+    "    else:\n",
+    "        print(number)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "cada33d5",
+   "metadata": {},
+   "source": [
+    "- to not modify lists in loops"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "id": "6b05a7df",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "new_list = []"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "id": "174ec3a1",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "one\n",
+      "three\n",
+      "four\n",
+      "five\n"
+     ]
+    }
+   ],
+   "source": [
+    "for number in my_list:\n",
+    "    if number == 'two':\n",
+    "        continue\n",
+    "    else:\n",
+    "        print(number)\n",
+    "        new_list.append(number)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "3a2574ed",
+   "metadata": {},
+   "source": [
+    "- enumarate(items, start=1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "id": "bfe2341b",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "a = [1, 2, 3, 4]\n",
+    "b = a"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 28,
+   "id": "7b8fdf33",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "129460114946752\n",
+      "129460114946752\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(id(a))\n",
+    "print(id(b))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "id": "9175c138",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "a.append(10)\n",
+    "b.append(11)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "id": "975f2229",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "a=[1, 2, 3, 4, 10, 11]\n",
+      "b=[1, 2, 3, 4, 10, 11]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"{a=}\")\n",
+    "print(f\"{b=}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "id": "994a636d",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "a = [1, ['a', 'b'], 4]\n",
+    "b = a.copy()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "id": "baa8cea5",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "a=[1, ['a', 'b'], 4]\n",
+      "b=[1, ['a', 'b'], 4]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"{a=}\")\n",
+    "print(f\"{b=}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 33,
+   "id": "47126635",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "b.append(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "id": "534e4234",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "a=[1, ['a', 'b'], 4]\n",
+      "b=[1, ['a', 'b'], 4, 10]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"{a=}\")\n",
+    "print(f\"{b=}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "id": "e15bd0c3",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "b[1][0] = 'c'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "id": "a8370dbe",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "a=[1, ['c', 'b'], 4]\n",
+      "b=[1, ['c', 'b'], 4, 10]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"{a=}\")\n",
+    "print(f\"{b=}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "id": "db0b25ac",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from copy import deepcopy\n",
+    "\n",
+    "a = [1, ['a', 'b'], 4]\n",
+    "b = deepcopy(a)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "id": "b8df2ed5",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "a=[1, ['a', 'b'], 4]\n",
+      "b=[1, ['a', 'b'], 4]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"{a=}\")\n",
+    "print(f\"{b=}\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "id": "7083f7a9",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "b[1][0] = 'c'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "id": "cdfc0d07",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "a=[1, ['a', 'b'], 4]\n",
+      "b=[1, ['c', 'b'], 4]\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(f\"{a=}\")\n",
+    "print(f\"{b=}\")"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.10.13"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
